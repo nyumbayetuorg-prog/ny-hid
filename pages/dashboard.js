@@ -1,39 +1,74 @@
-import React from "react";
+import Sidebar from "../components/Sidebar";
+import ModuleCard from "../components/ModuleCard";
 
 export default function Dashboard() {
-  return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>NY-HID Dashboard</h1>
+  const modules = [
+    {
+      title: "Weekly Check-In",
+      description: "Reflect on your emotional, mental, and spiritual state.",
+      color: "#0F4C81",
+      link: "/weekly-checkin",
+    },
+    {
+      title: "Breathing Sanctuary",
+      description: "Guided practices to restore calm and regulate your system.",
+      color: "#FF7F50",
+      link: "/breathing",
+    },
+    {
+      title: "Affirmation Studio",
+      description: "Your personalized affirmations for identity and purpose.",
+      color: "#4CAF50",
+      link: "/affirmations",
+    },
+    {
+      title: "Insights Log",
+      description: "Track insights, patterns, and growth.",
+      color: "#9C27B0",
+      link: "/insights",
+    },
+  ];
 
-      <iframe
-        src="https://ny-hid.vercel.app"
-        style={styles.iframe}
-        frameBorder="0"
-        allow="fullscreen"
-      ></iframe>
+  return (
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <main
+        style={{
+          flex: 1,
+          padding: "40px",
+          background: "#F6F8FA",
+          boxSizing: "border-box",
+        }}
+      >
+        <h1 style={{ fontSize: "32px", color: "#0F4C81", marginBottom: "20px" }}>
+          Calm Sanctuary Dashboard
+        </h1>
+
+        <p style={{ fontSize: "18px", color: "#555", marginBottom: "40px" }}>
+          Select a module to begin your weekly healing journey.
+        </p>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {modules.map((m, index) => (
+            <ModuleCard
+              key={index}
+              title={m.title}
+              description={m.description}
+              color={m.color}
+              onClick={() => (window.location.href = m.link)}
+            />
+          ))}
+        </div>
+      </main>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "100%",
-    minHeight: "100vh",
-    background: "#f5f5f5",
-    padding: "20px",
-    boxSizing: "border-box",
-  },
-  title: {
-    textAlign: "center",
-    fontSize: "32px",
-    marginBottom: "20px",
-    color: "#222",
-  },
-  iframe: {
-    width: "100%",
-    height: "85vh",
-    borderRadius: "10px",
-    border: "1px solid #ddd",
-    overflow: "hidden",
-  },
-};
