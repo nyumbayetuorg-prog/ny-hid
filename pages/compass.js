@@ -1,36 +1,28 @@
-import Sidebar from "../components/Sidebar";
+import CompassTool from "../components/CompassTool";
 
-export default function MeaningCompass() {
+export default function Compass() {
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar />
-      <main style={{ padding: "40px", width: "100%" }}>
-        <h1 style={{ fontSize: "42px", color: "#0F4C81", marginBottom: "20px" }}>
-          Meaning Compass
-        </h1>
-        <p style={{ fontSize: "18px", maxWidth: "700px", lineHeight: "1.8" }}>
-          Tools, insights, and guided prompts to help you reconnect with purpose, values,
-          and direction.
-        </p>
+    <div style={{ padding: "40px" }}>
+      <h1>Meaning Compass</h1>
+      <p>Tools to align your identity, purpose, and values.</p>
 
-        <div style={{ marginTop: "40px" }}>
-          <a
-            href="#"
-            style={{
-              display: "inline-block",
-              padding: "14px 22px",
-              background: "#00A86B",
-              color: "white",
-              borderRadius: "12px",
-              textDecoration: "none",
-              fontWeight: "bold",
-              fontSize: "18px",
-            }}
-          >
-            Explore Meaning Tools
-          </a>
-        </div>
-      </main>
+      <CompassTool
+        title="Identity Inquiry"
+        description="Who were you this week? What parts of you showed up the most?"
+        color="#0F4C81"
+      />
+
+      <CompassTool
+        title="Purpose Pulse"
+        description="Rate your sense of purpose this week (1–10)."
+        color="#22C55E"
+      />
+
+      <CompassTool
+        title="Value Alignment Check"
+        description="Which action this week aligned most with your values?"
+        color="#F97316"
+      />
     </div>
   );
 }
