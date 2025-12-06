@@ -1,72 +1,60 @@
-// components/Sidebar.js
+import { useRouter } from "next/router";
 
-import React from "react";
+export default function Sidebar() {
+  const router = useRouter();
 
-export default function Sidebar({ currentPage = "Home", onNavigate }) {
-  const menuItems = [
-    { label: "Calm Sanctuary", key: "home" },
-    { label: "Breathing Room", key: "breathing" },
-    { label: "Journaling Space", key: "journal" },
-    { label: "Meaning Compass", key: "meaning" },
-    { label: "Support Log", key: "support" },
-  ];
+  const navItem = (label, path) => {
+    const active = router.pathname === path;
+
+    return (
+      <a
+        href={path}
+        style={{
+          padding: "12px 0",
+          fontSize: "18px",
+          textDecoration: "none",
+          color: active ? "#0F4C81" : "white",
+          fontWeight: active ? "bold" : "normal",
+          background: active ? "rgba(255,255,255,0.2)" : "transparent",
+          borderRadius: "8px",
+          paddingLeft: "12px",
+          transition: "0.2s",
+        }}
+      >
+        {label}
+      </a>
+    );
+  };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.logo}>NY-HID™</div>
+    <aside
+      style={{
+        width: "260px",
+        background: "#0F4C81",
+        color: "white",
+        padding: "30px",
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <h2 style={{ fontWeight: "bold", fontSize: "26px", marginBottom: "40px" }}>
+        NY-HID™
+      </h2>
 
-      <nav style={styles.nav}>
-        {menuItems.map((item) => (
-          <div
-            key={item.key}
-            onClick={() => onNavigate && onNavigate(item.key)}
-            style={{
-              ...styles.navItem,
-              ...(currentPage === item.key ? styles.active : {}),
-            }}
-          >
-            {item.label}
-          </div>
-        ))}
+      <nav
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "18px",
+        }}
+      >
+        {navItem("Calm Sanctuary", "/dashboard")}
+        {navItem("Breathing Room", "/breathing")}
+        {navItem("Journaling Space", "/journal")}
+        {navItem("Meaning Compass", "/compass")}
+        {navItem("Support Log", "/support")}
       </nav>
-    </div>
+    </aside>
   );
 }
-
-const styles = {
-  container: {
-    width: "250px",
-    background: "#0F4C81", // NY deep blue
-    color: "white",
-    height: "100vh",
-    padding: "25px",
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "column",
-  },
-
-  logo: {
-    fontSize: "26px",
-    fontWeight: "700",
-    marginBottom: "50px",
-  },
-
-  nav: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "18px",
-  },
-
-  navItem: {
-    fontSize: "18px",
-    cursor: "pointer",
-    padding: "10px 8px",
-    borderRadius: "6px",
-    transition: "0.25s ease",
-  },
-
-  active: {
-    background: "rgba(255, 255, 255, 0.25)",
-    fontWeight: "bold",
-  },
-};
