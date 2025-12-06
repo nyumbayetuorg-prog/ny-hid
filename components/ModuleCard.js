@@ -1,29 +1,22 @@
-export default function ModuleCard({ title, description }) {
+export default function ModuleCard({ title, description, color = "#0F4C81", onClick }) {
   return (
     <div
+      onClick={onClick}
       style={{
-        padding: "20px",
-        border: "1px solid #ccc",
-        borderRadius: "10px",
         background: "white",
+        borderRadius: "16px",
+        padding: "20px",
+        boxShadow: "0px 4px 10px rgba(0,0,0,0.08)",
+        cursor: "pointer",
+        borderLeft: `8px solid ${color}`,
+        transition: "0.3s",
       }}
     >
-      <h3 style={{ marginTop: 0 }}>{title}</h3>
-      <p>{description}</p>
+      <h3 style={{ margin: "0 0 10px", color: color }}>{title}</h3>
 
-      <button
-        style={{
-          marginTop: "10px",
-          padding: "10px 15px",
-          background: "#0F4C81",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
-        }}
-      >
-        Open
-      </button>
+      <p style={{ margin: 0, fontSize: "15px", lineHeight: "1.5", color: "#222" }}>
+        {description}
+      </p>
     </div>
   );
 }
