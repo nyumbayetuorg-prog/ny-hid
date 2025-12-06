@@ -1,36 +1,34 @@
-import Sidebar from "../components/Sidebar";
+import JournalPrompt from "../components/JournalPrompt";
 
 export default function Journal() {
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar />
-      <main style={{ padding: "40px", width: "100%" }}>
-        <h1 style={{ fontSize: "42px", color: "#0F4C81", marginBottom: "20px" }}>
-          Journaling Space
-        </h1>
-        <p style={{ fontSize: "18px", maxWidth: "700px", lineHeight: "1.8" }}>
-          A private space to reflect, write, and process your inner experiences as you
-          move through healing.
-        </p>
+    <div style={{ padding: "40px" }}>
+      <h1>Journaling Space</h1>
+      <p>Use these prompts to explore your inner world.</p>
 
-        <div style={{ marginTop: "40px" }}>
-          <a
-            href="#"
-            style={{
-              display: "inline-block",
-              padding: "14px 22px",
-              background: "#8C6FF7",
-              color: "white",
-              borderRadius: "12px",
-              textDecoration: "none",
-              fontWeight: "bold",
-              fontSize: "18px",
-            }}
-          >
-            Start Journaling
-          </a>
-        </div>
-      </main>
+      <JournalPrompt
+        title="Daily Reflection"
+        prompt="What emotion did you feel the strongest today?"
+        color="#0F4C81"
+      />
+
+      <JournalPrompt
+        title="Gratitude"
+        prompt="What are you grateful for that you often overlook?"
+        color="#22C55E"
+      />
+
+      <JournalPrompt
+        title="Meaning Exploration"
+        prompt="Where did you feel most like yourself this week?"
+        color="#F97316"
+      />
+
+      <JournalPrompt
+        title="Stress Deconstruction"
+        prompt="What belief felt heavy today? Why?"
+        color="#A21CAF"
+      />
     </div>
   );
 }
