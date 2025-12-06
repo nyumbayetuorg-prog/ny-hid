@@ -1,22 +1,44 @@
-import Sidebar from "../../components/Sidebar";
-import ModuleCard from "../../components/ModuleCard";
-
-export default function Dashboard() {
+export default function Home() {
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar />
+    <div
+      style={{
+        fontFamily: "Arial, sans-serif",
+        padding: "60px 40px",
+        maxWidth: "900px",
+        margin: "0 auto",
+        textAlign: "center",
+      }}
+    >
+      <h1 style={{ fontSize: "42px", marginBottom: "20px", color: "#0F4C81" }}>
+        NY-HID™ Calm Sanctuary
+      </h1>
 
-      <main style={{ flex: 1, padding: "40px", overflowY: "auto" }}>
-        <h1>Calm Sanctuary – Week 1 Dashboard</h1>
+      <p
+        style={{
+          fontSize: "20px",
+          lineHeight: "1.6",
+          marginBottom: "40px",
+          color: "#444",
+        }}
+      >
+        Your weekly self-mastery dashboard.  
+        Access your sanctuary modules, insights, and healing practice tools.
+      </p>
 
-        <div style={{ marginTop: "30px", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
-          <ModuleCard title="Morning Reset" description="Your daily grounding & clarity sequence." />
-          <ModuleCard title="Emotional Check-In" description="Quick self-assessment to track your inner state." />
-          <ModuleCard title="Breathing Sanctuary" description="Guided breathing & vagus nerve activation." />
-          <ModuleCard title="Inner Inquiry Prompts" description="Reflective prompts for self-awareness." />
-          <ModuleCard title="Meaning Reconstruction" description="Re-align identity, purpose, goals." />
-        </div>
-      </main>
+      <a
+        href="/dashboard"
+        style={{
+          padding: "14px 28px",
+          background: "#0F4C81",
+          color: "white",
+          borderRadius: "8px",
+          fontSize: "18px",
+          textDecoration: "none",
+          fontWeight: "bold",
+        }}
+      >
+        Enter Dashboard →
+      </a>
     </div>
   );
 }
