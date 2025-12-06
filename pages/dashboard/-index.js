@@ -42,3 +42,16 @@ export default function Home() {
     </div>
   );
 }
+import dynamic from "next/dynamic";
+const LoadingScreen = dynamic(() => import("../components/LoadingScreen"), {
+  ssr: false,
+});
+
+export default function Dashboard() {
+  return (
+    <>
+      <LoadingScreen />
+      <main> ... your dashboard content ... </main>
+    </>
+  );
+}
