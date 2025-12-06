@@ -32,3 +32,9 @@ export default function handler(req, res) {
     role: user.role,
   });
 }
+let redirectPath = "/dashboard";
+
+if (role === "creative") redirectPath = "/creative";
+if (role === "ops") redirectPath = "/ops";
+
+return res.status(200).json({ success: true, redirect: redirectPath });
