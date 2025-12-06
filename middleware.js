@@ -45,3 +45,12 @@ export const config = {
     "/api/protected/:path*",
   ],
 };
+const { payload } = await jwtVerify(token, SECRET);
+
+// If token older than 8 hours, expire it
+const MAX_AGE_HOURS = 8;
+
+if (Date.now() / 1000 - payload.iat > MAX_AGE_HOURS * 3600) {
+  const loginUrl = new URL("/login", req.url);
+  return NextResponse.redirect(loginUrl);
+}
