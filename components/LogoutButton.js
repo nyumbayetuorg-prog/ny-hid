@@ -1,21 +1,13 @@
 export default function LogoutButton() {
-  const handleLogout = async () => {
+  const logout = async () => {
     await fetch("/api/logout");
     window.location.href = "/login";
   };
 
   return (
     <button
-      onClick={handleLogout}
-      style={{
-        background: "#d9534f",
-        color: "white",
-        border: "none",
-        padding: "10px 16px",
-        borderRadius: "8px",
-        cursor: "pointer",
-        fontWeight: "bold",
-      }}
+      onClick={logout}
+      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold"
     >
       Logout
     </button>
