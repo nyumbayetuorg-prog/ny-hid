@@ -91,3 +91,6 @@ export default function Dashboard() {
     </ProtectedRoute>
   );
 }
+import WeeklyNarrative from "../components/WeeklyNarrative";
+
+<WeeklyNarrative />
