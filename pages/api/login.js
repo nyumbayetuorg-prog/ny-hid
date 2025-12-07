@@ -32,14 +32,15 @@ export default function handler(req, res) {
   res.setHeader("Set-Cookie", cookie);
 
   // REDIRECT TARGETS
-  const redirects = {
-    founder: "/dashboard",
-    creative: "/creative",
-    ops: "/ops",
-  };
-
-  return res.status(200).json({
-    success: true,
-    redirect: redirects[role],
-  });
+  cif (role === "founder") {
+  return res.status(200).json({ success: true, redirect: "/dashboard" });
 }
+if (role === "creative") {
+  return res.status(200).json({ success: true, redirect: "/creative" });
+}
+if (role === "ops") {
+  return res.status(200).json({ success: true, redirect: "/ops" });
+}
+
+// fallback — rare
+return res.status(200).json({ success: true, redirect: "/" });
