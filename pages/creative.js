@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SmartPanel from "@/components/SmartPanel";
 
-export default function CreativeWorkspace() {
+export default function Creative() {
   const [output, setOutput] = useState("");
 
   async function runAction(action) {
@@ -20,42 +21,38 @@ export default function CreativeWorkspace() {
     <ProtectedRoute role="creative">
       <Sidebar />
 
-      <div className="workspace-container">
+      <div className="main-content">
         <h1 className="page-title">Creative Intelligence Workspace</h1>
-        <p className="subtitle">
-          The NY Brain generates content ideas, scripts, hooks, and insights for Jenelyn.
-        </p>
+
+        {/* SMART PANEL */}
+        <SmartPanel
+          data={{
+            emotional: "High anxiety among students",
+            pipeline: "12 high-risk cases",
+            creative: "Need gambling awareness stories",
+            ops: "Airtable backlog rising",
+            message: "Your art is the medicine. Create from truth, not pressure."
+          }}
+        />
+
+        <p className="subtitle">NY Brain insights to guide all creative output</p>
 
         <div className="actions-grid">
-
-          <button
-            className="ny-button"
-            onClick={() => runAction("creative_generate_hooks")}
-          >
-            🎣 Generate 10 High-Impact Hooks
+          <button className="ny-button" onClick={() => runAction("creative_script")}>
+            🎬 Generate Healing Script
           </button>
 
-          <button
-            className="ny-button"
-            onClick={() => runAction("creative_video_scripts")}
-          >
-            🎥 Create Short-Form Video Scripts
+          <button className="ny-button" onClick={() => runAction("creative_short_video")}>
+            🎥 Short Video Concept
           </button>
 
-          <button
-            className="ny-button"
-            onClick={() => runAction("creative_ecq_storytelling")}
-          >
-            🧠 Convert ECQ Insights Into Storytelling Content
+          <button className="ny-button" onClick={() => runAction("creative_thumbnail")}>
+            🖼 Thumbnail Concepts
           </button>
 
-          <button
-            className="ny-button"
-            onClick={() => runAction("creative_youtube_titles")}
-          >
-            🏆 Generate 15 YouTube Titles (SEO-Optimized)
+          <button className="ny-button" onClick={() => runAction("creative_content_calendar")}>
+            📅 Content Calendar (7 Days)
           </button>
-
         </div>
 
         <div className="output-box">
