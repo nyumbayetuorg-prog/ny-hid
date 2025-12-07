@@ -1,96 +1,61 @@
-import { useEffect, useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import SmartPanel from "@/components/SmartPanel";
-import { Bar, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, BarElement, ArcElement, CategoryScale, LinearScale } from "chart.js";
+// pages/dashboard.js
 
-ChartJS.register(BarElement, ArcElement, CategoryScale, LinearScale);
+import Sidebar from "../components/Sidebar";
+import WeeklyNarrative from "../components/WeeklyNarrative";
+import { Pie } from "react-chartjs-2";
+import { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
   const [metrics, setMetrics] = useState(null);
 
   useEffect(() => {
-    async function loadMetrics() {
-      const res = await fetch("/api/metrics");
-      const data = await res.json();
-      setMetrics(data);
-    }
-    loadMetrics();
+    fetch("/api/metrics")
+      .then((res) => res.json())
+      .then((data) => setMetrics(data));
   }, []);
 
   return (
-    <ProtectedRoute role="founder">
+    <div className="flex">
       <Sidebar />
 
-      <div className="main-content">
-        <h1 className="page-title">Founder Executive Dashboard</h1>
+      <div className="flex-1 p-10">
+        <h1 className="text-3xl font-bold mb-6">Founder Intelligence Dashboard</h1>
 
-        {/* SMART PANEL */}
-        <SmartPanel
-          data={{
-            emotional: "High anxiety among students",
-            pipeline: "12 high-risk cases",
-            creative: "Need gambling awareness stories",
-            ops: "Airtable backlog rising",
-            message: "Move with clarity, not speed. Kenya needs your stillness today."
-          }}
-        />
+        {/* Weekly Narrative */}
+        <WeeklyNarrative />
 
-        <p className="subtitle">National intelligence overview powered by NY-HID™</p>
+        {!metrics ? (
+          <p>Loading Dashboard Metrics…</p>
+        ) : (
+          <div className="bg-white p-6 rounded-lg shadow-md w-96">
+            <h2 className="text-xl font-semibold mb-4">Gambling Risk Index</h2>
 
-        {!metrics && <p>Loading analytics…</p>}
-
-        {metrics && (
-          <>
-            {/* RISK LEVEL BAR CHART */}
-            <div className="output-box">
-              <h2>Risk Levels (Raw Submissions)</h2>
-              <Bar
-                data={{
-                  labels: Object.keys(metrics.riskCounts),
-                  datasets: [
-                    {
-                      label: "Number of Cases",
-                      data: Object.values(metrics.riskCounts),
-                      backgroundColor: ["#4b5cc4", "#f4c542", "#1a1f36", "#6b7280"],
-                    },
-                  ],
-                }}
-              />
-            </div>
-
-            {/* SUPPORT PIPELINE PIE CHART */}
-            <div className="output-box">
-              <h2>Support Pipeline Status</h2>
-              <Pie
-                data={{
-                  labels: Object.keys(metrics.pipelineCounts),
-                  datasets: [
-                    {
-                      label: "Cases",
-                      data: Object.values(metrics.pipelineCounts),
-                      backgroundColor: [
-                        "#4b5cc4",
-                        "#f4c542",
-                        "#1a1f36",
-                        "#6b7280",
-                        "#8e44ad",
-                        "#2ecc71",
-                        "#e74c3c",
-                        "#95a5a6",
-                      ],
-                    },
-                  ],
-                }}
-              />
-            </div>
-          </>
+            <Pie
+              data={{
+                labels: ["High Risk", "Moderate", "Low"],
+                datasets: [
+                  {
+                    data: [
+                      metrics.gamblingRisk.high,
+                      metrics.gamblingRisk.moderate,
+                      metrics.gamblingRisk.low,
+                    ],
+                    backgroundColor: ["#b91c1c", "#facc15", "#16a34a"],
+                  },
+                ],
+              }}
+            />
+          </div>
         )}
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }
-import WeeklyNarrative from "../components/WeeklyNarrative";
-
-<WeeklyNarrative />
