@@ -1,60 +1,28 @@
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Sidebar() {
-  const router = useRouter();
-
-  const navItem = (label, path) => {
-    const active = router.pathname === path;
-
-    return (
-      <a
-        href={path}
-        style={{
-          padding: "12px 0",
-          fontSize: "18px",
-          textDecoration: "none",
-          color: active ? "#0F4C81" : "white",
-          fontWeight: active ? "bold" : "normal",
-          background: active ? "rgba(255,255,255,0.2)" : "transparent",
-          borderRadius: "8px",
-          paddingLeft: "12px",
-          transition: "0.2s",
-        }}
-      >
-        {label}
-      </a>
-    );
-  };
+  async function logout() {
+    await fetch("/api/logout");
+    window.location.href = "/login";
+  }
 
   return (
-    <aside
-      style={{
-        width: "260px",
-        background: "#0F4C81",
-        color: "white",
-        padding: "30px",
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <h2 style={{ fontWeight: "bold", fontSize: "26px", marginBottom: "40px" }}>
-        NY-HID™
-      </h2>
+    <div className="sidebar">
+      <h2>NY-HID™</h2>
 
-      <nav
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "18px",
-        }}
+      <Link href="/dashboard">Founder Dashboard</Link>
+      <Link href="/creative">Creative Workspace</Link>
+      <Link href="/ops">Ops Workspace</Link>
+
+      <hr style={{ margin: "24px 0", opacity: 0.2 }} />
+
+      <button
+        onClick={logout}
+        className="ny-button"
+        style={{ width: "100%", background: "#c0392b", marginTop: "10px" }}
       >
-        {navItem("Calm Sanctuary", "/dashboard")}
-        {navItem("Breathing Room", "/breathing")}
-        {navItem("Journaling Space", "/journal")}
-        {navItem("Meaning Compass", "/compass")}
-        {navItem("Support Log", "/support")}
-      </nav>
-    </aside>
+        Logout
+      </button>
+    </div>
   );
 }
