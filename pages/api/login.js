@@ -1,82 +1,45 @@
-// pages/login.js
-import { useState } from "react";
+// pages/api/login.js
+import { serialize } from "cookie";
 
-export default function Login() {
-  const [role, setRole] = useState("founder");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default function handler(req, res) {
+  const { role, password } = req.body;
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
-
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role, password }),
-    });
-
-    const result = await res.json();
-
-    if (result.success) {
-      // Save role in browser memory
-      localStorage.setItem("ny_role", role);
-
-      // Redirect to correct dashboard
-      window.location.href = result.redirect;
-    } else {
-      setError(result.error);
-    }
+  // VALIDATION: role exists
+  if (!role || !password) {
+    return res.status(400).json({ success: false, error: "Missing fields." });
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0F4C81]">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+  // ROLE PASSWORDS
+  const passwords = {
+    founder: "NYFounder#1/2025!",
+    creative: "NYCreate#1/2025!",
+    ops: "NYOps#1/2025!",
+  };
 
-        <h1 className="text-2xl font-bold text-center mb-6 text-[#0F4C81]">
-          Nyumba Yetu Workspace Login
-        </h1>
+  // INCORRECT PASSWORD
+  if (password !== passwords[role]) {
+    return res.status(401).json({ success: false, error: "Incorrect password." });
+  }
 
-        {error && (
-          <p className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</p>
-        )}
+  // SET COOKIE
+  const cookie = serialize("ny_role", role, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 6, // 6 hours
+  });
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Role Selector */}
-          <div>
-            <label className="block mb-1 font-semibold">Select Role</label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full border p-2 rounded"
-            >
-              <option value="founder">Founder</option>
-              <option value="creative">Creative</option>
-              <option value="ops">Operations</option>
-            </select>
-          </div>
+  res.setHeader("Set-Cookie", cookie);
 
-          {/* Password */}
-          <div>
-            <label className="block mb-1 font-semibold">Password</label>
-            <input
-              type="password"
-              className="w-full border p-2 rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your role password"
-            />
-          </div>
+  // REDIRECT TARGETS
+  const redirects = {
+    founder: "/dashboard",
+    creative: "/creative",
+    ops: "/ops",
+  };
 
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-[#0F4C81] text-white p-3 rounded hover:bg-[#0d3f6b]"
-          >
-            Login
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+  return res.status(200).json({
+    success: true,
+    redirect: redirects[role],
+  });
 }
