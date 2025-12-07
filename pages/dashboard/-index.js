@@ -1,93 +1,125 @@
 // pages/dashboard.js
-import Layout from "../components/Layout";
-import ECQCharts from "../components/ECQCharts";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
+import Sidebar from "../components/Sidebar";
+import LogoutButton from "../components/LogoutButton";
+
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
-  const [output, setOutput] = useState("");
-  const [analytics, setAnalytics] = useState(null);
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load saved output
+  // Fetch Airtable Metrics
   useEffect(() => {
-    const saved = localStorage.getItem("ny_founder_output");
-    if (saved) setOutput(saved);
+    fetch("/api/metrics")
+      .then((res) => res.json())
+      .then((data) => {
+        setMetrics(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Metrics fetch failed:", err);
+        setLoading(false);
+      });
   }, []);
 
-  // Load analytics
-  useEffect(() => {
-    async function loadData() {
-      const res = await fetch("/api/ecq-analytics");
-      const json = await res.json();
-      if (json.success) setAnalytics(json.data);
-    }
-    loadData();
-  }, []);
+  if (loading)
+    return (
+      <div className="flex h-screen items-center justify-center text-xl">
+        Loading NY Founder Intelligence…
+      </div>
+    );
 
-  // NY Brain Action Handler
-  async function runBrainAction(action) {
-    setOutput("⏳ Processing…");
+  if (!metrics)
+    return (
+      <div className="flex h-screen items-center justify-center text-xl">
+        Could not load metrics.
+      </div>
+    );
 
-    const res = await fetch("/api/ny-brain", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: "founder", action }),
-    });
-
-    const data = await res.json();
-    setOutput(data.output);
-    localStorage.setItem("ny_founder_output", data.output);
-  }
+  // CHART DATA — Gambling ECQ Risk Breakdown
+  const pieData = {
+    labels: ["High Risk", "Moderate Risk", "Low Risk"],
+    datasets: [
+      {
+        data: [
+          metrics.gamblingRisk.high,
+          metrics.gamblingRisk.moderate,
+          metrics.gamblingRisk.low,
+        ],
+        backgroundColor: ["#b91c1c", "#facc15", "#16a34a"],
+      },
+    ],
+  };
 
   return (
-    <Layout>
-      <h1 className="text-3xl font-bold text-[#0F4C81] mb-6">
-        Founder Command Dashboard
-      </h1>
+    <div className="flex min-h-screen bg-gray-100">
 
-      {/* Action Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+      {/* Sidebar Navigation */}
+      <Sidebar />
 
-        <button
-          onClick={() => runBrainAction("generate_weekly_narrative")}
-          className="p-4 bg-[#0F4C81] text-white rounded shadow hover:bg-[#0d3f6b]"
-        >
-          ✨ Generate Weekly Narrative
-        </button>
+      {/* MAIN CONTENT */}
+      <main className="flex-1 p-10">
 
-        <button
-          onClick={() => runBrainAction("analyse_ecq_patterns")}
-          className="p-4 bg-[#4CAF50] text-white rounded shadow hover:bg-[#3e8f41]"
-        >
-          📊 Analyse ECQ Emotional Patterns
-        </button>
+        {/* Header */}
+        <div className="flex justify-between items-center mb-10">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-800">
+            Founder Intelligence Dashboard
+          </h1>
+          <LogoutButton />
+        </div>
 
-        <button
-          onClick={() => runBrainAction("founder_strategy_summary")}
-          className="p-4 bg-[#F4B400] text-white rounded shadow hover:bg-[#d19500]"
-        >
-          🧭 Founder Strategy Summary
-        </button>
+        {/* SUMMARY CARDS */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-        <button
-          onClick={() => runBrainAction("national_trend_signals")}
-          className="p-4 bg-[#9C27B0] text-white rounded shadow hover:bg-[#7a208e]"
-        >
-          🌍 National Trend Signals
-        </button>
+          {/* Total Submissions */}
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-700 font-semibold text-lg mb-2">
+              Total ECQ Submissions
+            </h3>
+            <p className="text-3xl font-bold text-[#0F4C81]">
+              {metrics.submissions}
+            </p>
+          </div>
 
-      </div>
+          {/* High-Risk Count */}
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-700 font-semibold text-lg mb-2">
+              High-Risk Cases
+            </h3>
+            <p className="text-3xl font-bold text-red-600">
+              {metrics.gamblingRisk.high}
+            </p>
+          </div>
 
-      {/* Output */}
-      <div className="bg-white rounded-lg shadow p-6 whitespace-pre-wrap mb-12">
-        {output || "NY Brain Founder Insights will appear here…"}
-      </div>
+          {/* Moderate Risk */}
+          <div className="bg-white rounded-xl shadow p-6">
+            <h3 className="text-gray-700 font-semibold text-lg mb-2">
+              Moderate-Risk Cases
+            </h3>
+            <p className="text-3xl font-bold text-yellow-500">
+              {metrics.gamblingRisk.moderate}
+            </p>
+          </div>
+        </section>
 
-      {/* Analytics */}
-      <h2 className="text-2xl font-bold text-[#0F4C81] mb-6">
-        ECQ Analytics Overview
-      </h2>
+        {/* CHARTS SECTION */}
+        <section className="bg-white rounded-xl shadow p-8 w-full max-w-2xl">
+          <h2 className="text-2xl font-bold text-gray-700 mb-6">
+            Gambling Risk Index (ECQ Analytics)
+          </h2>
 
-      <ECQCharts data={analytics} />
-    </Layout>
+          <Pie data={pieData} />
+        </section>
+      </main>
+    </div>
   );
 }
