@@ -1,77 +1,75 @@
 // pages/creative.js
-import { useEffect, useState } from "react";
+import Layout from "../components/Layout";
+import { useState, useEffect } from "react";
 
 export default function CreativeWorkspace() {
   const [output, setOutput] = useState("");
 
-  // Load saved memory on page load
+  // Load last creative output
   useEffect(() => {
     const saved = localStorage.getItem("ny_creative_output");
     if (saved) setOutput(saved);
   }, []);
 
-  // Handler for all NY Brain Creative Actions
   async function runBrainAction(action) {
     setOutput("⏳ Processing…");
 
     const res = await fetch("/api/ny-brain", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: "creative", action })
+      body: JSON.stringify({ role: "creative", action }),
     });
 
     const data = await res.json();
     setOutput(data.output);
 
-    // Save output to device for continuity
+    // Save memory
     localStorage.setItem("ny_creative_output", data.output);
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-[#0F4C81]">
+    <Layout>
+      <h1 className="text-3xl font-bold text-[#0F4C81] mb-6">
         Creative Command Workspace
       </h1>
 
-      {/* Action Buttons */}
+      {/* Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
         <button
           onClick={() => runBrainAction("generate_short_scripts")}
-          className="p-4 bg-[#0F4C81] text-white rounded-lg shadow hover:bg-[#0d3f6b]"
+          className="p-4 bg-[#0F4C81] text-white rounded shadow hover:bg-[#0d3f6b]"
         >
           🎬 Generate Short-Form Scripts
         </button>
 
         <button
           onClick={() => runBrainAction("thumbnail_concepts")}
-          className="p-4 bg-[#4CAF50] text-white rounded-lg shadow hover:bg-[#3b8f41]"
+          className="p-4 bg-[#4CAF50] text-white rounded shadow hover:bg-[#3e8f41]"
         >
           🎨 Thumbnail Concepts
         </button>
 
         <button
           onClick={() => runBrainAction("content_calendar")}
-          className="p-4 bg-[#FF9800] text-white rounded-lg shadow hover:bg-[#e68900]"
+          className="p-4 bg-[#F4B400] text-white rounded shadow hover:bg-[#d19500]"
         >
-          🗓️ Weekly Content Calendar
+          🗓 Weekly Content Calendar
         </button>
 
         <button
           onClick={() => runBrainAction("creative_brief")}
-          className="p-4 bg-[#9C27B0] text-white rounded-lg shadow hover:bg-[#7a1f89]"
+          className="p-4 bg-[#9C27B0] text-white rounded shadow hover:bg-[#7a208e]"
         >
-          🧠 Creative Brief (AI-Optimized)
+          🧠 Creative Brief
         </button>
 
       </div>
 
-      {/* Output Panel */}
-      <div
-        className="p-6 bg-white rounded-lg shadow whitespace-pre-wrap min-h-[300px]"
-      >
-        {output || "NY Brain (Creative Mode) will output here…"}
+      {/* Output */}
+      <div className="bg-white rounded-lg shadow p-6 whitespace-pre-wrap min-h-[300px]">
+        {output || "NY Brain Creative Intelligence will appear here…"}
       </div>
-    </div>
+    </Layout>
   );
 }
