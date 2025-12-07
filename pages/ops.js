@@ -1,44 +1,68 @@
-import LogoutButton from "../components/LogoutButton";
+import { useState } from "react";
+import Sidebar from "@/components/Sidebar";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
-export default function OpsDashboard() {
+export default function OpsWorkspace() {
+  const [output, setOutput] = useState("");
+
+  async function runAction(action) {
+    const res = await fetch("/api/ny-brain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action }),
+    });
+
+    const data = await res.json();
+    setOutput(data.message);
+  }
+
   return (
-    <div className="p-8">
-      <header className="flex items-center justify-between mb-10">
-        <h1 className="text-3xl font-bold text-[#0F2C59]">
-          Ops Lead Dashboard — NY-HID™
-        </h1>
-        <LogoutButton />
-      </header>
+    <ProtectedRoute role="ops">
+      <Sidebar />
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="workspace-container">
+        <h1 className="page-title">Operations Intelligence Workspace</h1>
+        <p className="subtitle">
+          The NY Brain supports Peter with execution, tasks, workflow, and system building.
+        </p>
 
-        {/* ECQ Tools */}
-        <div className="p-6 bg-white rounded-xl shadow-md">
-          <h2 className="text-xl font-bold mb-3">📘 ECQ Tools</h2>
-          <button className="w-full py-3 bg-[#0F2C59] text-white rounded-lg">
-            Sync Airtable → NY-HID
+        <div className="actions-grid">
+
+          <button
+            className="ny-button"
+            onClick={() => runAction("ops_task_list")}
+          >
+            📋 Generate Weekly Ops Task List
           </button>
-        </div>
 
-        {/* Website Tasks */}
-        <div className="p-6 bg-white rounded-xl shadow-md">
-          <h2 className="text-xl font-bold mb-3">🌐 Website Tasks</h2>
-          <button className="w-full py-3 bg-[#0F2C59] text-white rounded-lg">
-            Update Pages with New Material
+          <button
+            className="ny-button"
+            onClick={() => runAction("ops_pipeline_actions")}
+          >
+            🔧 Support Pipeline — Next Action Steps
           </button>
+
+          <button
+            className="ny-button"
+            onClick={() => runAction("ops_content_upload_plan")}
+          >
+            ⬆️ Content Upload Plan for the Week
+          </button>
+
+          <button
+            className="ny-button"
+            onClick={() => runAction("ops_system_check")}
+          >
+            ⚙️ System Health Check (Airtable + ECQ Forms)
+          </button>
+
         </div>
 
-        {/* Retreat Tasks */}
-        <div className="p-6 bg-white rounded-xl shadow-md">
-          <h2 className="text-xl font-bold mb-3">🏝 Retreat Workflow</h2>
-          <ul className="space-y-2">
-            <li>✔ Landing page done</li>
-            <li>⏳ Lead capture improvements</li>
-            <li>⏳ Auto email response</li>
-          </ul>
+        <div className="output-box">
+          <h2>NY Brain Output</h2>
+          <pre className="output-panel">{output}</pre>
         </div>
-
-      </section>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
