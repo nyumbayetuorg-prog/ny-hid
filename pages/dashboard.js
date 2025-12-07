@@ -1,74 +1,57 @@
-import Sidebar from "../components/Sidebar";
-import ModuleCard from "../components/ModuleCard";
+import LogoutButton from "../components/LogoutButton";
 
 export default function Dashboard() {
-  const modules = [
-    {
-      title: "Weekly Check-In",
-      description: "Reflect on your emotional, mental, and spiritual state.",
-      color: "#0F4C81",
-      link: "/weekly-checkin",
-    },
-    {
-      title: "Breathing Sanctuary",
-      description: "Guided practices to restore calm and regulate your system.",
-      color: "#FF7F50",
-      link: "/breathing",
-    },
-    {
-      title: "Affirmation Studio",
-      description: "Your personalized affirmations for identity and purpose.",
-      color: "#4CAF50",
-      link: "/affirmations",
-    },
-    {
-      title: "Insights Log",
-      description: "Track insights, patterns, and growth.",
-      color: "#9C27B0",
-      link: "/insights",
-    },
-  ];
-
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <main
-        style={{
-          flex: 1,
-          padding: "40px",
-          background: "#F6F8FA",
-          boxSizing: "border-box",
-        }}
-      >
-        <h1 style={{ fontSize: "32px", color: "#0F4C81", marginBottom: "20px" }}>
-          Calm Sanctuary Dashboard
+    <div className="p-8">
+      <header className="flex items-center justify-between mb-10">
+        <h1 className="text-3xl font-bold text-[#0F2C59]">
+          Founder Dashboard — NY-HID™
         </h1>
+        <LogoutButton />
+      </header>
 
-        <p style={{ fontSize: "18px", color: "#555", marginBottom: "40px" }}>
-          Select a module to begin your weekly healing journey.
-        </p>
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "24px",
-          }}
-        >
-          {modules.map((m, index) => (
-            <ModuleCard
-              key={index}
-              title={m.title}
-              description={m.description}
-              color={m.color}
-              onClick={() => (window.location.href = m.link)}
-            />
-          ))}
+        {/* NY Brain Action Panel */}
+        <div className="p-6 bg-white rounded-xl shadow-md">
+          <h2 className="text-xl font-bold mb-3">🧠 NY Brain (Founder Commands)</h2>
+          <button className="w-full py-3 bg-[#0F2C59] text-white rounded-lg mb-3">
+            Generate Today’s Team Instructions
+          </button>
+          <button className="w-full py-3 bg-[#0F2C59] text-white rounded-lg mb-3">
+            Review Content Strategy
+          </button>
+          <button className="w-full py-3 bg-[#0F2C59] text-white rounded-lg">
+            Diagnose Bottlenecks
+          </button>
         </div>
-      </main>
+
+        {/* Team Overview Panel */}
+        <div className="p-6 bg-white rounded-xl shadow-md">
+          <h2 className="text-xl font-bold mb-3">👥 Team Activity</h2>
+          <ul className="space-y-2">
+            <li>Jenelyn — Last upload: Pending</li>
+            <li>Peter — Last system update: Pending</li>
+          </ul>
+        </div>
+
+        {/* ECQ Panel */}
+        <div className="p-6 bg-white rounded-xl shadow-md">
+          <h2 className="text-xl font-bold mb-3">📊 ECQ Status Overview</h2>
+          <p>Submissions: Loading…</p>
+          <p>Reviewing: Loading…</p>
+          <p>Support Needed: Loading…</p>
+        </div>
+
+        {/* Content Pipeline Panel */}
+        <div className="p-6 bg-white rounded-xl shadow-md">
+          <h2 className="text-xl font-bold mb-3">🎬 Content Pipeline</h2>
+          <p>Videos in Progress: Loading…</p>
+          <p>Scripts Needed: Loading…</p>
+          <p>Thumbnails Pending: Loading…</p>
+        </div>
+
+      </section>
     </div>
   );
 }
