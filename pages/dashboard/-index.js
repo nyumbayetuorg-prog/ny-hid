@@ -1,125 +1,160 @@
-// pages/dashboard.js
-import { useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
-import Sidebar from "../components/Sidebar";
-import LogoutButton from "../components/LogoutButton";
+import { useState, useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 import {
   Chart as ChartJS,
   ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
   Tooltip,
   Legend,
+  LineElement,
+  PointElement,
 } from "chart.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+import { Pie, Bar, Line } from "react-chartjs-2";
+
+ChartJS.register(
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement
+);
 
 export default function Dashboard() {
   const [metrics, setMetrics] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [brainOutput, setBrainOutput] = useState("");
 
-  // Fetch Airtable Metrics
   useEffect(() => {
     fetch("/api/metrics")
       .then((res) => res.json())
-      .then((data) => {
-        setMetrics(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Metrics fetch failed:", err);
-        setLoading(false);
-      });
-  }, []);
+      .then((data) => setMetrics(data.metrics));
 
-  if (loading)
-    return (
-      <div className="flex h-screen items-center justify-center text-xl">
-        Loading NY Founder Intelligence…
-      </div>
-    );
+    fetch("/api/ny-brain")
+      .then((res) => res.json())
+      .then((data) => setBrainOutput(data.message));
+  }, []);
 
   if (!metrics)
     return (
-      <div className="flex h-screen items-center justify-center text-xl">
-        Could not load metrics.
-      </div>
+      <ProtectedRoute role="founder">
+        <Sidebar />
+        <div style={{ padding: "40px" }}>Loading founder dashboard…</div>
+      </ProtectedRoute>
     );
 
-  // CHART DATA — Gambling ECQ Risk Breakdown
+  // ----- CARD METRICS -----
+  const totalSubs = metrics.totals.submissions;
+  const pipelineCases = metrics.totals.pipelineCases;
+  const highRisk =
+    metrics.riskDistribution["High"] ||
+    metrics.riskDistribution["High Risk"] ||
+    0;
+
+  // ----- CHART DATA -----
   const pieData = {
-    labels: ["High Risk", "Moderate Risk", "Low Risk"],
+    labels: Object.keys(metrics.riskDistribution),
     datasets: [
       {
-        data: [
-          metrics.gamblingRisk.high,
-          metrics.gamblingRisk.moderate,
-          metrics.gamblingRisk.low,
-        ],
-        backgroundColor: ["#b91c1c", "#facc15", "#16a34a"],
+        data: Object.values(metrics.riskDistribution),
+        backgroundColor: ["#D7263D", "#FFCA3A", "#1982C4", "#6A4C93", "#8AC926"],
+      },
+    ],
+  };
+
+  const readinessData = {
+    labels: Object.keys(metrics.readinessHistogram),
+    datasets: [
+      {
+        data: Object.values(metrics.readinessHistogram),
+        backgroundColor: "#1982C4",
+      },
+    ],
+  };
+
+  const pipelineData = {
+    labels: Object.keys(metrics.pipelineStatus),
+    datasets: [
+      {
+        data: Object.values(metrics.pipelineStatus),
+        backgroundColor: "#6A4C93",
+      },
+    ],
+  };
+
+  const teamLoadData = {
+    labels: Object.keys(metrics.teamLoad),
+    datasets: [
+      {
+        data: Object.values(metrics.teamLoad),
+        backgroundColor: "#8AC926",
       },
     ],
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-
-      {/* Sidebar Navigation */}
+    <ProtectedRoute role="founder">
       <Sidebar />
 
-      {/* MAIN CONTENT */}
-      <main className="flex-1 p-10">
+      <div className="dashboard-container">
+        <h1 className="page-title">Founder Intelligence Dashboard</h1>
 
-        {/* Header */}
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-800">
-            Founder Intelligence Dashboard
-          </h1>
-          <LogoutButton />
+        {/* Summary Cards */}
+        <div className="summary-cards">
+          <div className="card">
+            <h2>{totalSubs}</h2>
+            <p>Total ECQ Submissions</p>
+          </div>
+
+          <div className="card">
+            <h2>{pipelineCases}</h2>
+            <p>Active Support Pipeline Cases</p>
+          </div>
+
+          <div className="card high-risk">
+            <h2>{highRisk}</h2>
+            <p>High-Risk Cases</p>
+          </div>
         </div>
 
-        {/* SUMMARY CARDS */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-
-          {/* Total Submissions */}
-          <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-700 font-semibold text-lg mb-2">
-              Total ECQ Submissions
-            </h3>
-            <p className="text-3xl font-bold text-[#0F4C81]">
-              {metrics.submissions}
-            </p>
+        {/* Chart Row 1 */}
+        <div className="charts-row">
+          <div className="chart-box">
+            <h3>Risk Level Distribution</h3>
+            <Pie data={pieData} />
           </div>
 
-          {/* High-Risk Count */}
-          <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-700 font-semibold text-lg mb-2">
-              High-Risk Cases
-            </h3>
-            <p className="text-3xl font-bold text-red-600">
-              {metrics.gamblingRisk.high}
-            </p>
+          <div className="chart-box">
+            <h3>Readiness to Change</h3>
+            <Bar data={readinessData} />
+          </div>
+        </div>
+
+        {/* Chart Row 2 */}
+        <div className="charts-row">
+          <div className="chart-box">
+            <h3>Support Pipeline Status</h3>
+            <Bar data={pipelineData} />
           </div>
 
-          {/* Moderate Risk */}
-          <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="text-gray-700 font-semibold text-lg mb-2">
-              Moderate-Risk Cases
-            </h3>
-            <p className="text-3xl font-bold text-yellow-500">
-              {metrics.gamblingRisk.moderate}
-            </p>
+          <div className="chart-box">
+            <h3>Team Case Load</h3>
+            <Bar data={teamLoadData} />
           </div>
-        </section>
+        </div>
 
-        {/* CHARTS SECTION */}
-        <section className="bg-white rounded-xl shadow p-8 w-full max-w-2xl">
-          <h2 className="text-2xl font-bold text-gray-700 mb-6">
-            Gambling Risk Index (ECQ Analytics)
-          </h2>
-
-          <Pie data={pieData} />
-        </section>
-      </main>
-    </div>
+        {/* NY Brain Intelligence Output */}
+        <div className="brain-box">
+          <h2>NY Brain Intelligence Brief</h2>
+          <pre className="brain-output">{brainOutput}</pre>
+        </div>
+      </div>
+    </ProtectedRoute>
   );
 }
