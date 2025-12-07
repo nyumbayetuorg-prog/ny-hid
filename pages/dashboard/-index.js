@@ -1,16 +1,29 @@
 // pages/dashboard.js
 import Layout from "../components/Layout";
+import ECQCharts from "../components/ECQCharts";
 import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const [output, setOutput] = useState("");
+  const [analytics, setAnalytics] = useState(null);
 
-  // Load previous founder output from storage
+  // Load saved output
   useEffect(() => {
     const saved = localStorage.getItem("ny_founder_output");
     if (saved) setOutput(saved);
   }, []);
 
+  // Load analytics
+  useEffect(() => {
+    async function loadData() {
+      const res = await fetch("/api/ecq-analytics");
+      const json = await res.json();
+      if (json.success) setAnalytics(json.data);
+    }
+    loadData();
+  }, []);
+
+  // NY Brain Action Handler
   async function runBrainAction(action) {
     setOutput("⏳ Processing…");
 
@@ -22,8 +35,6 @@ export default function Dashboard() {
 
     const data = await res.json();
     setOutput(data.output);
-
-    // Persist founder intelligence output
     localStorage.setItem("ny_founder_output", data.output);
   }
 
@@ -34,7 +45,7 @@ export default function Dashboard() {
       </h1>
 
       {/* Action Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
 
         <button
           onClick={() => runBrainAction("generate_weekly_narrative")}
@@ -66,10 +77,17 @@ export default function Dashboard() {
 
       </div>
 
-      {/* Output Panel */}
-      <div className="bg-white rounded-lg shadow p-6 whitespace-pre-wrap min-h-[300px]">
-        {output || "NY Brain Founder Intelligence will appear here…"}
+      {/* Output */}
+      <div className="bg-white rounded-lg shadow p-6 whitespace-pre-wrap mb-12">
+        {output || "NY Brain Founder Insights will appear here…"}
       </div>
+
+      {/* Analytics */}
+      <h2 className="text-2xl font-bold text-[#0F4C81] mb-6">
+        ECQ Analytics Overview
+      </h2>
+
+      <ECQCharts data={analytics} />
     </Layout>
   );
 }
