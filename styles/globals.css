@@ -1,46 +1,133 @@
-/* GLOBAL RESET */
-* {
-  margin: 0;
+/* ===============================
+   NYUMBA YETU — BRAND SYSTEM
+   =============================== */
+
+:root {
+  --ny-indigo: #4b5cc4;
+  --ny-gold: #f4c542;
+  --ny-deep: #1a1f36;
+  --ny-light: #f7f8fc;
+  --ny-gray: #6b7280;
+  --ny-soft: #eef0f6;
+
+  --ny-radius: 14px;
+  --ny-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+html, body {
   padding: 0;
-  box-sizing: border-box;
+  margin: 0;
+  background: var(--ny-light);
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--ny-deep);
 }
 
-/* SMOOTH FONT + BACKGROUND */
-body {
-  background: #f6f8fa;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
-  color: #222;
+/* NAV + SIDEBAR ----------------------------------*/
+
+.sidebar {
+  width: 260px;
+  background: white;
+  height: 100vh;
+  padding: 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: var(--ny-shadow);
 }
 
-/* LINKS */
-a {
-  color: inherit;
+.sidebar h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: var(--ny-indigo);
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 16px;
   text-decoration: none;
+  font-weight: 500;
+  border-radius: var(--ny-radius);
+  color: var(--ny-deep);
 }
 
-/* BUTTON HOVER STATES */
-button:hover {
-  opacity: 0.9;
+.sidebar a:hover {
+  background: var(--ny-soft);
 }
 
-/* SMOOTH TRANSITIONS */
-button,
-div,
-input,
-textarea {
-  transition: 0.25s ease-in-out;
+/* MAIN WRAPPER ----------------------------------*/
+
+.main-content {
+  margin-left: 260px;
+  padding: 40px;
 }
 
-/* SCROLLBAR */
-::-webkit-scrollbar {
-  width: 8px;
+/* BUTTONS ---------------------------------------*/
+
+.ny-button {
+  display: inline-block;
+  padding: 14px 20px;
+  background: var(--ny-indigo);
+  color: white;
+  border-radius: var(--ny-radius);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s ease;
+  box-shadow: var(--ny-shadow);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 10px;
+.ny-button:hover {
+  background: #3d4da8;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
+/* GRID ------------------------------------------*/
+
+.actions-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 30px;
+}
+
+/* OUTPUT PANEL ----------------------------------*/
+
+.output-box {
+  background: white;
+  padding: 20px;
+  margin-top: 40px;
+  border-radius: var(--ny-radius);
+  box-shadow: var(--ny-shadow);
+}
+
+.output-panel {
+  white-space: pre-wrap;
+  font-family: "Courier New", monospace;
+  padding: 10px;
+}
+
+/* TITLES ----------------------------------------*/
+
+.page-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--ny-indigo);
+}
+
+.subtitle {
+  color: var(--ny-gray);
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+/* MOBILE ----------------------------------------*/
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
 }
