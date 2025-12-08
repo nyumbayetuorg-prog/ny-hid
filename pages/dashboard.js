@@ -59,3 +59,19 @@ export default function Dashboard() {
     </div>
   );
 }
+import Sidebar from "../components/Sidebar";
+import WeeklyNarrative from "../components/WeeklyNarrative";
+import ProtectedRoute from "../components/ProtectedRoute";
+
+export default function DashboardPage() {
+  return (
+    <ProtectedRoute>
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 p-6">
+          <WeeklyNarrative />
+        </main>
+      </div>
+    </ProtectedRoute>
+  );
+}
