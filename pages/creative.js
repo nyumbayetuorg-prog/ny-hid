@@ -63,3 +63,19 @@ export default function Creative() {
     </ProtectedRoute>
   );
 }
+import Sidebar from "../components/Sidebar";
+import SmartPanel from "../components/SmartPanel";
+import ProtectedRoute from "../components/ProtectedRoute";
+
+export default function CreativePage() {
+  return (
+    <ProtectedRoute>
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 p-6">
+          <SmartPanel />
+        </main>
+      </div>
+    </ProtectedRoute>
+  );
+}
