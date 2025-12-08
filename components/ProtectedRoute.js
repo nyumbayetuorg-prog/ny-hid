@@ -5,11 +5,10 @@ export default function ProtectedRoute({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    const role =
-      typeof window !== "undefined" && localStorage.getItem("ny-role");
+    const isLoggedIn = typeof window !== "undefined" && localStorage.getItem("isLoggedIn");
 
-    if (!role) {
-      router.push("/login");
+    if (!isLoggedIn) {
+      router.replace("/login");
     }
   }, [router]);
 
