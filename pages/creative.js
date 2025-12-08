@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import SmartPanel from "@/components/SmartPanel";
+import Sidebar from "../components/Sidebar";
+import ProtectedRoute from "../components/ProtectedRoute";
+import SmartPanel from "../components/SmartPanel";
 
 export default function Creative() {
   const [output, setOutput] = useState("");

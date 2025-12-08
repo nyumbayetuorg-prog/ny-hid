@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import Sidebar from "../components/Sidebar";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 import {
   Chart as ChartJS,

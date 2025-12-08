@@ -1,5 +1,5 @@
-import Sidebar from "@/components/Sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import Sidebar from "../components/Sidebar";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function CountyDashboard() {
   return (

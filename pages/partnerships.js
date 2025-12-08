@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import Sidebar from "../components/Sidebar";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function PartnershipsDashboard() {
   const [output, setOutput] = useState("");
