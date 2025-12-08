@@ -35,3 +35,13 @@ export default function WeeklyNarrative() {
     </div>
   );
 }
+// Placeholder for WeeklyNarrative to fix missing module error.
+// Replace later with your real implementation.
+
+export default function WeeklyNarrative() {
+  return (
+    <div style={{ padding: "20px", color: "#666" }}>
+      Weekly Narrative component placeholder.
+    </div>
+  );
+}
